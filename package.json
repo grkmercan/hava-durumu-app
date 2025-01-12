@@ -1,5 +1,5 @@
 {
-  "homapage":".",
+  "homapage":"./",
   "name": "hava-durumu-app",
   "version": "0.1.0",
   "private": false,
