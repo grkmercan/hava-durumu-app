@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -13,8 +13,12 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const API_KEY = 'd39a3cb2b011b92c97a41809748ba3b1'; 
-  
-  const fetchWeatherData = async (city) => {
+
+  useEffect(() => {
+    document.body.className = 'default';
+  }, []); 
+
+   const fetchWeatherData = async (city) => {
     setLoading(true);
     setError(null);
     try {
@@ -28,24 +32,28 @@ function App() {
       
       setWeatherData(response.data);
       setLoading(false);
-      
-     const temp = response.data.current.temperature;
-     if (temp > 30) {
-       document.body.className = 'very-hot';
-     } else if (temp > 20) {
-       document.body.className = 'warm';
-     } else if (temp > 10) {
-       document.body.className = 'mild';
-     } else if (temp > 0) {
-       document.body.className = 'cool';
+     const weatherDesc = response.data.current.weather_descriptions[0].toLowerCase();
+     if (weatherDesc.includes('rain') || weatherDesc.includes('drizzle')) {
+       document.body.className = 'rainy';
+     } else if (weatherDesc.includes('snow')) {
+       document.body.className = 'snowy';
+     } else if (weatherDesc.includes('cloud') || weatherDesc.includes('overcast')) {
+       document.body.className = 'cloudy';
+     } else if (weatherDesc.includes('sunny') || weatherDesc.includes('clear')) {
+       document.body.className = 'sunny';
+     } else if (weatherDesc.includes('thunder') || weatherDesc.includes('storm')) {
+       document.body.className = 'stormy';
+     } else if (weatherDesc.includes('mist') || weatherDesc.includes('fog')) {
+       document.body.className = 'foggy';
      } else {
-       document.body.className = 'cold';
+       document.body.className = 'default';
      }
       
     } catch (err) {
       setError('Hava durumu bilgisi alınamadı. Lütfen geçerli bir şehir adı girin.');
       setWeatherData(null);
       setLoading(false);
+      document.body.className = 'default';
     }
   };
 
